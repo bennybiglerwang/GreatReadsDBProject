@@ -8,10 +8,10 @@ $password = 'greatreads4750';
 $host = 'cs4750project-381601:us-east4:greatreads';       // e.g., 'cs4750:us-east4:db-demo'; 
 $dbname = 'cs4750project';           // e.g., 'guestbook';
 $dsn = "mysql:unix_socket=/cloudsql/instance-connection-name;dbname=your-database-name";
-      e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
---------- to test, include app.yaml with the following code
-runtime: php74
-entrypoint: serve connect-db.php
+    //   e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
+// --------- to test, include app.yaml with the following code
+// runtime: php74
+// entrypoint: serve connect-db.php
 
 // to get instance connection name, go to GCP SQL overview page
 ////////////////////////////////////////////

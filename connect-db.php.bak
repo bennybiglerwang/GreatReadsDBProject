@@ -1,10 +1,27 @@
 <?php
+// Remember to start the database server (or GCP SQL instance) before trying to connect to it
+////////////////////////////////////////////
+
+/** S23, PHP (on Google Standard App Engine) connect to MySQL instance (GCP) **/
+$username = 'root';                       // or your username
+$password = 'greatreads4750';     
+$host = 'cs4750project-381601:us-east4:greatreads';       // e.g., 'cs4750:us-east4:db-demo'; 
+$dbname = 'cs4750project';           // e.g., 'guestbook';
+$dsn = "mysql:unix_socket=/cloudsql/instance-connection-name;dbname=your-database-name";
+    //   e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
+// --------- to test, include app.yaml with the following code
+// runtime: php74
+// entrypoint: serve connect-db.php
+
+// to get instance connection name, go to GCP SQL overview page
+////////////////////////////////////////////
+
 /** S23, PHP (on local XAMPP or CS server) connect to MySQL instance (GCP) **/
- $username = 'root';
- $password = 'greatreads4750';
- $host = 'cs4750project-381601:us-east4:greatreads';       // e.g., 'cs4750:us-east4:db-demo'; 
- $dbname = 'cs4750finalproject';        // e.g., 'guestbook';
- $dsn = "mysql:host=35.245.57.93;dbname=$dbname";   // connect PHP (XAMPP) to DB (GCP)
+// $username = 'root';
+// $password = 'your-root-password';
+// $host = 'instance-connection-name';       // e.g., 'cs4750:us-east4:db-demo'; 
+// $dbname = 'your-database-name;;           // e.g., 'guestbook';
+// $dsn = "mysql:host=your-SQL-public-IP-address;dbname=your-database-name";   // connect PHP (XAMPP) to DB (GCP)
 //       e.g., "mysql:host=99.99.999.99;dbname=$dbname";   
 
 // to get public IP addres of the SQL instance, go to GCP SQL overview page
@@ -16,6 +33,21 @@
 // 2. On the SQL connections page, add authorized networks, enter the IP address
 ////////////////////////////////////////////
 
+/** S23, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on local XAMPP) **/
+// $username = 'username';
+// $password = 'password';
+// $host = 'localhost:3306';           // default phpMyAdmin port = 3306
+// $dbname = 'friends';
+// $dsn = "mysql:host=$host;dbname=$dbname";  
+////////////////////////////////////////////
+
+/** S23, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
+// $username = 'your-computingID'; 
+// $password = 'your-mysql-password';
+// $host = 'mysql01.cs.virginia.edu';
+// $dbname = 'your-computingID';
+// $dsn = "mysql:host=$host;dbname=$dbname";
+////////////////////////////////////////////
 
 // To find a hostname, access phpMyAdmin
 // - select tob "User accounts"
@@ -53,7 +85,7 @@ try
    $db = new PDO($dsn, $username, $password);
    
    // dispaly a message to let us know that we are connected to the database 
-   echo "<p>You are connected to the database: $dsn</p>";
+   //echo "<p>You are connected to the database: $dsn</p>";
 }
 catch (PDOException $e)     // handle a PDO exception (errors thrown by the PDO library)
 {

@@ -3,15 +3,15 @@
 ////////////////////////////////////////////
 
 /** S23, PHP (on Google Standard App Engine) connect to MySQL instance (GCP) **/
-// $username = 'root';                       // or your username
-// $password = 'your-root-password';     
-// $host = 'instance-connection-name';       // e.g., 'cs4750:us-east4:db-demo'; 
-// $dbname = 'your-database-name';           // e.g., 'guestbook';
-// $dsn = "mysql:unix_socket=/cloudsql/instance-connection-name;dbname=your-database-name";
-//       e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
-// --------- to test, include app.yaml with the following code
-// runtime: php74
-// entrypoint: serve connect-db.php
+$username = 'root';                       // or your username
+$password = 'greatreads4750';     
+$host = 'cs4750project-381601:us-east4:greatreads';       // e.g., 'cs4750:us-east4:db-demo'; 
+$dbname = 'cs4750project';           // e.g., 'guestbook';
+$dsn = "mysql:unix_socket=/cloudsql/instance-connection-name;dbname=your-database-name";
+      e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
+--------- to test, include app.yaml with the following code
+runtime: php74
+entrypoint: serve connect-db.php
 
 // to get instance connection name, go to GCP SQL overview page
 ////////////////////////////////////////////
@@ -34,11 +34,11 @@
 ////////////////////////////////////////////
 
 /** S23, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on local XAMPP) **/
-$username = 'username';
-$password = 'password';
-$host = 'localhost:3306';           // default phpMyAdmin port = 3306
-$dbname = 'friends';
-$dsn = "mysql:host=$host;dbname=$dbname";  
+// $username = 'username';
+// $password = 'password';
+// $host = 'localhost:3306';           // default phpMyAdmin port = 3306
+// $dbname = 'friends';
+// $dsn = "mysql:host=$host;dbname=$dbname";  
 ////////////////////////////////////////////
 
 /** S23, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/

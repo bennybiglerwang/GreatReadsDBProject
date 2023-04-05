@@ -49,8 +49,8 @@
 /** connect to the database **/
 try 
 {
-//  $db = new PDO("mysql:host=$hostname;dbname=db-demo", $username, $password);
-   $db = new PDO($dsn, $username, $password);
+   $db = new PDO("mysql:host=35.245.57.93;dbname=$dbname", $username, $password);
+   //$db = new PDO($dsn, $username, $password);
    
    // dispaly a message to let us know that we are connected to the database 
    echo "<p>You are connected to the database: $dsn</p>";

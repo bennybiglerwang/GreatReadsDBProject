@@ -1,4 +1,7 @@
-<? php require 'connect-db.php'; ?>
+<!DOCTYPE html>
+<html>
+
+<?php require 'connect-db.php'; ?>
 
 <div class="container">
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -40,3 +43,4 @@
      </div>
   </div>
 </div>
+</html>

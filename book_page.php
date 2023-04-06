@@ -84,6 +84,7 @@
 			<input type="radio" class="form-control" name="star_rating" value="5" style="position:absolute; left:100px; z-index:950; opacity:0" required />
 			<input type="hidden" name="ISBN" value=<?php echo $_POST['ISBN']; ?>>
 			<input type="hidden" name="title" value=<?php echo $_POST['ISBN']; ?>>
+			<input type="hidden" name="authors" value=<?php echo $_POST['authors']; ?>>
 			<span class="fa fa-star" style="position:absolute;left:20px"></span>
 			<span class="fa fa-star" style="position:absolute;left:40px"></span>
 			<span class="fa fa-star" style="position:absolute;left:60px"></span>
@@ -191,7 +192,10 @@
 				<input type="text" class="form-control" name="c_text" style="position:absolute; left:20px; top:0px" required>
 				<input type="submit" class="form-control" value="Reply" style="position:absolute; left:20px; top:28px">
 				<input type="hidden" name="review_num" value=<?php echo $review['review_num']?> >
-			</form>
+				<input type="hidden" name="ISBN" value=<?php echo $_POST['ISBN']; ?>>
+				<input type="hidden" name="title" value=<?php echo $_POST['ISBN']; ?>>
+				<input type="hidden" name="authors" value=<?php echo $_POST['authors']; ?>>
+				</form>
 			</div>
 		<?php endforeach ?>
 	</body>

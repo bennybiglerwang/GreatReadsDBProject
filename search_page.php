@@ -1,7 +1,34 @@
+<?php session_start(); ?>
+<?php require 'connect-db.php'; ?>
+<?php 
+	if(isset($_POST['username'])){
+		if(check_user_exists($_POST['username'])){
+			$_SESSION['username'] = $_POST['username'];
+			echo "Signed in as ".$_SESSION['username'];
+		}
+		else{
+			echo "User does not exist, try again!";
+		}
+	}
+	
+	function check_user_exists($username){
+		global $db;
+		$query = "
+		select * from users
+		where username = :username;";
+		$statement = $db->prepare($query);
+		$statement->bindValue(':username', $username);
+		$statement->execute();
+		$results = $statement->fetchAll();
+		$statement->closeCursor();
+		if(count($results)>0){
+			return true;
+		}
+		return false;
+	}
+?>
 <!DOCTYPE html>
 <html>
-
-<?php require 'connect-db.php'; ?>
 
 <div class="container">
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">

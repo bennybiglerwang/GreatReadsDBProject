@@ -1,3 +1,9 @@
+<?php session_start(); ?>
+<?php
+	if(isset($_SESSION['username'])){
+		echo "Signed in as ".$_SESSION['username'];
+	}
+?>
 <?php require 'connect-db.php'; ?>
 
 <!DOCTYPE html>
@@ -118,10 +124,45 @@
 			return $results;
 		}
 		
-		function post_review($r_text){
+		function post_review($ISBN, $username, $r_text, $star_rating){
+			global $db;
+			$query = "
+			insert into reviews
+			values(:ISBN, NULL, :username, :r_text, :star_rating, :r_date);";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':ISBN', $ISBN);
+			$statement->bindValue(':username', $username);
+			$statement->bindValue(':r_text', $r_text);
+			$statement->bindValue(':star_rating', $star_rating);
+			$date = date('Y/m/d', time());
+			$statement->bindValue(':r_date', $date);
+			$statement->execute();
+			$statement->closeCursor();
 		}
 		
-		function post_comment($c_text){
+		function post_comment($username, $review_num, $c_text){
+			global $db;
+			$query = "
+			insert into comments
+			values(:username, NULL, :review_num, :c_text, :c_date);";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':username', $username);
+			$statement->bindValue(':review_num', $review_num);
+			$statement->bindValue(':c_text', $c_text);
+			$date = date('Y/m/d', time());
+			$statement->bindValue(':c_date', $date);
+			$statement->execute();
+			$statement->closeCursor();
+		}
+		
+		if(isset($_POST['r_text']) and isset($_SESSION['username'])){
+			post_review($_POST['ISBN'], $_SESSION['username'], $_POST['r_text'], $_POST['star_rating'] );
+			#echo "Posted review.";
+		}
+		
+		if(isset($_POST['c_text']) and isset($_SESSION['username'])){
+			post_comment($_SESSION['username'], $_POST['review_num'], $_POST['c_text']);
+			echo "Posted review.";
 		}
 		
 		if(isset($_POST['ISBN'])){
@@ -149,6 +190,7 @@
 				<form name="comment_form" action="book_page.php" method="post">
 				<input type="text" class="form-control" name="c_text" style="position:absolute; left:20px; top:0px" required>
 				<input type="submit" class="form-control" value="Reply" style="position:absolute; left:20px; top:28px">
+				<input type="hidden" name="review_num" value=<?php echo $review['review_num']?> >
 			</form>
 			</div>
 		<?php endforeach ?>

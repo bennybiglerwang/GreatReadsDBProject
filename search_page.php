@@ -138,9 +138,11 @@ else {
                <td><?php echo $item['authors']; ?></td>        
                <td><?php echo $item['average_rating']; ?></td>
                <td>
-                  <form action="search_page.php" method="post">
+                  <form action="book_page.php" method="post">
                      <input type="submit" name="actionBtn" value="Details" class="btn btn-dark"/>
-                     <input type="hidden" name="book_to_inspect" value="<?php echo $item['isbn']; ?>"/>
+                     <input type="hidden" name="ISBN" value="<?php echo $item['isbn']; ?>"/>
+					 <input type="hidden" name="title" value="<?php echo $item['title']; ?>"/>
+                     <input type="hidden" name="authors" value="<?php echo $item['authors']; ?>"/>
                   </form>     
                </td>
                <td>

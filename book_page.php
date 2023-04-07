@@ -60,6 +60,15 @@
 		}
 		?>
 		</p>
+		<p>
+		<?php 
+		if(isset($_POST['ISBN'])){
+			echo "ISBN ".$_POST['ISBN'];
+		} else {
+			echo "book does not exist";
+		}
+		?>
+		</p>
 		
 		<div class="container">
 		  <h1> Join the discussion! </h1>  

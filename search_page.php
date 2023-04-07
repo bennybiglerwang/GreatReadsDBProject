@@ -1,29 +1,29 @@
 <?php session_start();
 require 'connect-db.php';
-	if(isset($_POST['username'])){
-		if(check_user_exists($_POST['username'])){
-			$_SESSION['username'] = $_POST['username'];
-			echo "Signed in as ".$_SESSION['username'];
-		}
-		else{
-			echo "User does not exist, try again!";
-		}
-	}
-	
-	function check_user_exists($username){
-		global $db;
-		$query = "
-		select * from users
-		where username = :username;";
-		$statement = $db->prepare($query);
-		$statement->bindValue(':username', $username);
-		$statement->execute();
-		$results = $statement->fetchAll();
-		$statement->closeCursor();
-		if(count($results)>0){
-			return true;
-		}
-		return false;
+if(isset($_POST['username'])){
+   if(check_user_exists($_POST['username'])){
+      $_SESSION['username'] = $_POST['username'];
+      echo "Signed in as ".$_SESSION['username'];
+   }
+   else{
+      echo "User does not exist, try again!";
+   }
+}
+
+function check_user_exists($username){
+   global $db;
+   $query = "
+   select * from users
+   where username = :username;";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':username', $username);
+   $statement->execute();
+   $results = $statement->fetchAll();
+   $statement->closeCursor();
+   if(count($results)>0){
+      return true;
+   }
+   return false;
 }
  
 function selectAllBooks(){

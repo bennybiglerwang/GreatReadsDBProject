@@ -96,6 +96,16 @@
 		  </div>
 		</form>
 		
+		<?php 
+		if(isset($_POST['r_text']) and isset($_SESSION['username'])){
+			try{
+				post_review($_POST['ISBN'], $_SESSION['username'], $_POST['r_text'], $_POST['star_rating'] );
+			} catch( PDOException $Exception) {
+				echo '<span style="color:#880808;text-align:center;"> !! You have already reviewed this book !! </span>';
+			}
+		}
+		?>
+		
 		<h1>Reviews: </h1>
 		
 		<?php 
@@ -156,14 +166,9 @@
 			$statement->closeCursor();
 		}
 		
-		if(isset($_POST['r_text']) and isset($_SESSION['username'])){
-			post_review($_POST['ISBN'], $_SESSION['username'], $_POST['r_text'], $_POST['star_rating'] );
-			#echo "Posted review.";
-		}
-		
 		if(isset($_POST['c_text']) and isset($_SESSION['username'])){
 			post_comment($_SESSION['username'], $_POST['review_num'], $_POST['c_text']);
-			echo "Posted review.";
+			#echo "Posted review.";
 		}
 		
 		if(isset($_POST['ISBN'])){

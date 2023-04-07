@@ -105,6 +105,9 @@
 			} catch( PDOException $Exception) {
 				echo '<span style="color:#880808;text-align:center;"> !! You have already reviewed this book !! </span>';
 			}
+			update_ratings_count($_POST['ISBN']);
+			update_average_rating($_POST['ISBN'], $_POST['star_rating'] );
+
 		}
 		?>
 		
@@ -167,12 +170,39 @@
 			$statement->execute();
 			$statement->closeCursor();
 		}
+
+		function update_ratings_count($ISBN){
+			global $db;
+			$query = "
+			update books 
+			set ratings_count = ratings_count + 1
+			where isbn = :ISBN;";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':ISBN', $ISBN);
+			$statement->execute();
+			$statement->closeCursor();
+		}
+
+		function update_average_rating($ISBN, $star_rating){
+			global $db;
+			$query = "
+			update books 
+			set average_rating = ((average_rating*(ratings_count-1)) + :star_rating)/ratings_count
+			where isbn = :ISBN;";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':ISBN', $ISBN);
+			$statement->bindValue(':star_rating', $star_rating);
+			$statement->execute();
+			$statement->closeCursor();
+		}
+
+
 		
 		if(isset($_POST['c_text']) and isset($_SESSION['username'])){
 			post_comment($_SESSION['username'], $_POST['review_num'], $_POST['c_text']);
-			#echo "Posted review.";
+			#echo "Posted comment.";
 		}
-		
+
 		if(isset($_POST['ISBN'])){
 			$reviews = select_reviews_for_book($_POST['ISBN']);
 		} else {

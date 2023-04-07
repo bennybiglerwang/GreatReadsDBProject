@@ -1,6 +1,7 @@
 <?php session_start(); ?>
 <?php require 'connect-db.php'; ?>
 <?php require 'filter_functions.php'; ?>
+<?php include('navbar.php'); ?>
 
 <?php
 if(isset($_POST['username'])){

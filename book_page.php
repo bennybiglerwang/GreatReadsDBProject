@@ -5,6 +5,7 @@
 	}
 ?>
 <?php require 'connect-db.php'; ?>
+<?php include('navbar.php'); ?>
 
 <!DOCTYPE html>
 <html>
@@ -31,6 +32,7 @@
 	</style>
 	
 	<body>
+
 		<h1>
 		<?php 
 		if(isset($_POST['title'])){

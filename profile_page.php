@@ -54,7 +54,7 @@ require 'connect-db.php';
 
     function get_user_activity($username) { 
         global $db;
-        $query = "SELECT review_num FROM writes WHERE username = :username;";
+        $query = "SELECT writes.review_num, reviews.r_text FROM writes JOIN reviews ON writes.review_num = reviews.review_num WHERE writes.username = :username;";
         $statement = $db->prepare($query);
         $statement->bindValue(':username', $username);
         $statement->execute();
@@ -90,8 +90,8 @@ require 'connect-db.php';
             <div claass="card">
                 <div class ="card-body">
                     <p class="card-title">Reviews: <?php echo count($_SESSION['review_num'])?></p>
-                    <?php foreach($activity as $row): ?>
-                        <p class="card-text">Review number: <?php echo $row['review_num']?></p>
+                    <?php foreach($_SESSION['review_num'] as $activity): ?>
+                        <p class="card-text">Review: <?php echo $activity['r_text']?> (Review number: <?php echo $activity['review_num']?>)</p>
                     <?php endforeach; ?>
                 </div>
             </div>

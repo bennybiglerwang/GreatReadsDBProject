@@ -52,7 +52,7 @@ if (isset($_POST['filter_options'])) {
     }
 }
 else {
-    echo "no set";
+    //echo "no set";
 }
 
 //<?php if(isset($_POST["filter_options"]) && $_POST["filter_options"]  == "Author") echo "selected";

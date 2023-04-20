@@ -7,10 +7,10 @@
 if(isset($_POST['username'])){
    if(check_user_exists($_POST['username'])){
       $_SESSION['username'] = $_POST['username'];
-      echo "Signed in as ".$_SESSION['username'];
+      echo "Welcome ".$_SESSION['username']."!<br />";
    }
    else{
-      echo "User does not exist, try again!";
+      echo "User does not exist, try again! <br />";
    }
 }
 

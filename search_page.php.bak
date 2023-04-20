@@ -1,15 +1,16 @@
 <?php session_start(); ?>
 <?php require 'connect-db.php'; ?>
 <?php require 'filter_functions.php'; ?>
+<?php include('navbar.php'); ?>
 
 <?php
 if(isset($_POST['username'])){
    if(check_user_exists($_POST['username'])){
       $_SESSION['username'] = $_POST['username'];
-      echo "Signed in as ".$_SESSION['username'];
+      echo "Signed in as ".$_SESSION['username']."<br />";
    }
    else{
-      echo "User does not exist, try again!";
+      echo "User does not exist, try again! <br />";
    }
 }
 
@@ -51,7 +52,7 @@ if (isset($_POST['filter_options'])) {
     }
 }
 else {
-    echo "no set";
+    //echo "no set";
 }
 
 //<?php if(isset($_POST["filter_options"]) && $_POST["filter_options"]  == "Author") echo "selected";
@@ -140,9 +141,9 @@ else {
                <td>
                   <form action="book_page.php" method="post">
                      <input type="submit" name="actionBtn" value="Details" class="btn btn-dark"/>
-                     <input type="hidden" name="isbn_to_inspect" value="<?php echo $item['isbn']; ?>"/>
-					 <input type="hidden" name="title_to_inspect" value="<?php echo $item['title']; ?>"/>
-                     <input type="hidden" name="authors_to_inspect" value="<?php echo $item['authors']; ?>"/>
+                     <input type="hidden" name="ISBN" value="<?php echo $item['isbn']; ?>"/>
+					 <input type="hidden" name="title" value="<?php echo $item['title']; ?>"/>
+                     <input type="hidden" name="authors" value="<?php echo $item['authors']; ?>"/>
                   </form>     
                </td>
                <td>

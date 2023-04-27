@@ -16,7 +16,20 @@
 
 if(isset($_POST['username'])){
     $username = $_POST['username'];
+    if(isset($_POST['email'])){
+         $email = $_POST['email'];
+    }
+    else if(!isset($_POST['email'])){
+        $email = 'no email';
+    }
 
+
+    if(isset($_POST['bio'])){
+        $bio = $_POST['bio'];
+    }
+    else if(!isset($_POST['bio'])){
+        $bio = 'no bio';
+    }
     if(check_user_exists($username)){
         $_POST['username'] = $username;
         $user = get_user_details($_POST['username']);
@@ -31,7 +44,7 @@ if(isset($_POST['username'])){
 
         
     }
-}
+} else echo 'user not set';
 
 // $username1 = $_SESSION['username'];
 // $username2 = $_POST['username'];
@@ -179,29 +192,39 @@ function get_user_activity($username) {
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body">
-                    <p class="card-title">User: <?php echo $_POST['username']?></p>
-                    <p class="card-text">Email: <?php echo $_POST['email']?></p>
-                    <p class="card-text">Bio: <?php echo $_POST['bio']?></p>
+                    <p class="card-title">User: <?php echo $username?></p>
+                    <p class="card-text">Email: <?php echo $email?></p>
+                    <p class="card-text">Bio: <?php echo $bio?></p>
                 </div>
             </div>  
         </div>
     </div>
     <form action="user_page.php" method="post">
-        <?php if(checkFriendshipStatus($_SESSION['username'], $_POST['username']) == "self"){ ?>
+        <?php if(checkFriendshipStatus($_SESSION['username'], $username) == "self"){ ?>
             <input type="submit" name="actionBtn" value="self" disabled />
-        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $_POST['username']) == "not friends"){ ?>
+        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "not friends"){ ?>
             <input type="submit" name="actionBtn" value="friend" />
-            <input type="hidden" name="friend_to_request" value="<?php echo $_POST['username']; ?>"/>
-        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $_POST['username']) == "friends"){ ?>
+            <input type="hidden" name="friend_to_request" value="<?php echo $username; ?>"/>
+            <input type="hidden" name="username" value="<?php echo $username; ?>"/>
+            <input type="hidden" name="email" value="<?php echo $email; ?>"/>
+            <input type="hidden" name="bio" value="<?php echo $bio; ?>"/>
+        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "friends"){ ?>
             <input type="submit" name="actionBtn" value="unfriend" />
             <input type="hidden" name="friend_to_unfriend" value="<?php echo $_POST['username']; ?>"/>
-        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $_POST['username']) == "request sent"){ ?>
+            <input type="hidden" name="username" value="<?php echo $username; ?>"/>
+            <input type="hidden" name="email" value="<?php echo $email; ?>"/>
+            <input type="hidden" name="bio" value="<?php echo $bio; ?>"/>
+        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "request sent"){ ?>
             <input type="submit" name="actionBtn" value="request sent" disabled />
-        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $_POST['username']) == "request received"){ ?>
+        <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "request received"){ ?>
             <input type="submit" name="actionBtn" value="accept request" />
-            <input type="hidden" name="friend_to_accept" value="<?php echo $_POST['username']; ?>"/>
-        <?php } ?>
+            <input type="hidden" name="friend_to_accept" value="<?php echo $username; ?>"/>
+            <input type="hidden" name="username" value="<?php echo $username; ?>"/>
+            <input type="hidden" name="email" value="<?php echo $email; ?>"/>
+            <input type="hidden" name="bio" value="<?php echo $bio; ?>"/>
     </form>     
+    <?php } ?>
+    <br></br>
     <strong>User Activity</strong>
     <div class="row">
         <div class="col-lg-8"> 
@@ -218,8 +241,3 @@ function get_user_activity($username) {
 </div>
 </body>
 </html>
-
-<!-- 
-<input type="submit" name="actionBtn" value=<?php echo checkFriendshipStatus($_SESSION['username'], $_POST['username'])?> class="btn btn-dark"/>
-        <input type="hidden" name="username_to_friend" value="<?php echo $item['username']; ?>"/>
-    </form>      -->

@@ -139,14 +139,10 @@ $search_results = selectAllUsers();
                      <input type="submit" name="actionBtn" value="Profile" class="btn btn-dark"/>
                      <input type="hidden" name="username" value="<?php echo $item['username']; ?>"/>
 					 <input type="hidden" name="email" value="<?php echo $item['email']; ?>"/>
+                     <input type="hidden" name="bio" value="<?php echo $item['bio']; ?>"/>
+
                   </form>     
                </td>
-               <!-- <td>
-                  <form action="search_page.php" method="post">
-                     <input type="submit" name="actionBtn" value="Rate" class="btn btn-danger"/>
-                     <input type="hidden" name="book_to_rate" value="<?php echo $item['isbn']; ?>"/>
-                  </form>     
-               </td>      -->
             </tr>
          <?php endforeach; ?>
          </table>

@@ -35,6 +35,8 @@
                 <a class="active" href="sign_in.php">Log In</a>
                  <a href="search_page.php">Home</a> 
                 <a href="profile_page.php">Profile</a>
+                <a href="search_users_page.php">Users</a>
+
             </ul>
         </div>
     </div>

@@ -23,7 +23,7 @@ include('navbar.php');
         }
     }
 
-	if(isset($_SESSION['username'])){
+	if(isset($_SESSION['username'])) { 
         $username = $_SESSION['username'];
 
 		if(check_user_exists($username)){
@@ -45,12 +45,12 @@ include('navbar.php');
             } else { 
                 echo "Not in existence";
             }
+        }
 
-			echo "Signed in as ".$_SESSION['username'];
-		} else {
-			header('Location: sign_in.php');
-            exit();
-		}
+			#echo "Signed in as ".$_SESSION['username'];
+	} else {
+		header('Location: sign_in.php');
+        exit();
     }
 
 	function check_user_exists($username){

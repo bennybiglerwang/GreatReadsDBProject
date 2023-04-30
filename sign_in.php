@@ -17,7 +17,7 @@ session_start();
 
 <body>
 <div class="container">
-  <h1>Sign in</h1>  
+  <h1>Sign In</h1>  
 
   <form name="mainForm" action="sign_in.php" method="post">   
   <div class="row mb-3 mx-3">

@@ -4,10 +4,7 @@
 	include('navbar.php');
 
 	if(isset($_SESSION['username'])){
-		echo "Signed in as ".$_SESSION['username'];
-	} else { 
-		header('Location: sign_in.php');
-        exit();
+		# echo "Signed in as ".$_SESSION['username'];
 	}
 
 	function add_to_reading_list($username, $ISBN, $status) {
@@ -28,7 +25,6 @@
             $stmt->execute(array(':username'=>$username, ':ISBN'=>$ISBN, ':status'=>$status));
         }
     }
-?>
 ?>
 
 <!DOCTYPE html>
@@ -81,11 +77,7 @@
 		} else {
 			echo "no ratings yet";
 		}
-		#if(isset($_POST['ISBN'])){
-		#	echo $_POST['ISBN'];
-		#} else { 
-		#	echo "where is the ISBN";
-		#}
+
 		?>
 		</p>
 		<p>

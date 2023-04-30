@@ -1,8 +1,11 @@
 <?php session_start(); ?>
 <?php
 	if(isset($_SESSION['username'])){
-		echo "Signed in as ".$_SESSION['username'];
-	}
+		#echo "Signed in as ".$_SESSION['username'];
+	} else { 
+        header('Location: sign_in.php');
+        exit();
+    }
 ?>
 <?php require 'connect-db.php'; ?>
 <?php require 'friends_functions.php'; ?>
@@ -14,6 +17,31 @@
 // echo $_POST['username'];
 // echo checkFriendshipStatus($_SESSION['username'], $_POST['username']);
 
+function get_user_books($username) {
+    global $db;
+
+    $query = "SELECT s.username, b.title, s.isbn, s.status FROM set_status s
+    INNER JOIN books b ON s.isbn = b.isbn
+    WHERE s.username = :username;";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':username', $username);
+    $statement->execute();
+    $books = $statement->fetchAll();
+    $statement->closeCursor();
+
+    unset($_SESSION['books']);
+    unset($_SESSION['bookTitles']);
+
+    $bookTitles = array();
+    foreach ($books as $book) {
+        $bookTitles[$book['isbn']] = $book['title'];
+    }
+   
+    $_SESSION['books'] = $books;
+    $_SESSION['bookTitles'] = $bookTitles;
+
+    return $books;
+}
 
 if(isset($_POST['username'])){
     $username = $_POST['username'];
@@ -21,7 +49,7 @@ if(isset($_POST['username'])){
          $email = $_POST['email'];
     }
     else if(!isset($_POST['email'])){
-        $email = 'no email';
+        $email = 'This user does not have an email';
     }
 
 
@@ -29,21 +57,19 @@ if(isset($_POST['username'])){
         $bio = $_POST['bio'];
     }
     else if(!isset($_POST['bio'])){
-        $bio = 'no bio';
+        $bio = 'This user does not have a bio';
     }
     if(check_user_exists($username)){
-        $_POST['username'] = $username;
-        $user = get_user_details($_POST['username']);
+        $user = get_user_details($username);
+        $email = $user['email'] ?? 'This user does not have an email';
+        $bio = $user['bio'] ?? 'This user does not have a bio';
 
-        $activity = get_user_activity($_POST['username']);
+        $activity = get_user_activity($username);
         if($activity != null) { 
             $_POST['review_num'] = $activity;
         }
 
-        $_POST['email'] = $user['email'];
-        $_POST['bio'] = $user['bio'];
-
-        
+        $books = get_user_books($username);    
     }
 } else echo 'user not set';
 
@@ -124,6 +150,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <?php foreach($_POST['review_num'] as $activity): ?>
                         <p class="card-text">Review: <?php echo $activity['r_text']?> (Review number: <?php echo $activity['review_num']?>)</p>
                     <?php endforeach; } else {echo "This user has no reviews";}?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <strong>Books</strong>
+    <div class="row">
+        <div class="col-lg-8"> 
+            <div class ="card">
+                <div class ="card-body">
+                    <h5 class="card-title">Books Read</h5>
+                    <ul class="list-group">
+                        <?php $books = get_user_books($username); ?>
+                        <?php foreach($books as $book): ?>
+                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
+                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                    <h5 class="card-title">Books Will Read</h5>
+                    <ul class="list-group">
+                        <?php foreach($books as $book): ?>
+                            <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
+                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                    <h5 class="card-title">Books Currently Reading</h5>
+                    <ul class="list-group">
+                        <?php foreach($books as $book): ?>
+                            <?php if ($book['status'] == 'currently-reading' && isset($book['isbn'])): ?>
+                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
             </div>
         </div>

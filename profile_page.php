@@ -208,7 +208,7 @@ include('navbar.php');
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Books Currently Reading</th>         
+                            <th>Currently Reading</th>         
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -238,12 +238,12 @@ include('navbar.php');
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Books Read</th>         
+                            <th>Books to Read</th>         
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
                         <?php foreach($_SESSION['isbn'] ?? [] as $book): ?>
-                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
+                            <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
                                 <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
                                     <tr>
                                         <?php $book_title = get_book_title($book['isbn']); ?>
@@ -262,18 +262,20 @@ include('navbar.php');
                             <?php endif; ?>
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
+
                     <!-- </ul>
                     <h5 class="card-title">Books Will Read</h5>
                     <ul class="list-group"> -->
-                    <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
+
+                        <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Book to Read</th>         
+                            <th>Books Read</th>         
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
                         <?php foreach($_SESSION['isbn'] ?? [] as $book): ?>
-                            <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
+                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
                                 <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
                                     <tr>
                                         <?php $book_title = get_book_title($book['isbn']); ?>

@@ -92,6 +92,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
   
     } 
 
+    function get_book_title($book_isbn){
+        global $db;
+        $query = "SELECT title FROM books WHERE isbn = :book_isbn;";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':book_isbn', $book_isbn);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        $statement->closeCursor();
+        return $results;
+    }
+    
+    function get_book_authors($book_isbn){
+        global $db;
+        $query = "SELECT authors FROM books WHERE isbn = :book_isbn;";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':book_isbn', $book_isbn);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        $statement->closeCursor();
+        return $results;
+    }
+
 }
 
 ?>
@@ -99,6 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="book_link.css"/>
+
 </head>
 <body>
 <div class="container">
@@ -162,30 +186,97 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             <div class ="card">
                 <div class ="card-body">
                     <h5 class="card-title">Books Read</h5>
-                    <ul class="list-group">
+                    <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
+                        <thead>
+                        <tr style="background-color:#B0B0B0">
+                            <th>Currently Reading</th>         
+                        </tr>
+                        </thead>
+                        <?php $count = 1; ?>
                         <?php $books = get_user_books($username); ?>
                         <?php foreach($books as $book): ?>
-                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
-                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                        <?php if ($book['status'] == 'currently-reading' && isset($book['isbn'])): ?>
+                                <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
+                                    <tr>
+                                        <?php $book_title = get_book_title($book['isbn']); ?>
+                                        <?php $book_authors = get_book_authors($book['isbn']); ?>
+                                        <td>
+                                            <input type="hidden" name="title" value="<?php echo $book_title[0]['title']; ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="ISBN" value="<?php echo $book['isbn'] ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="authors" value="<?php echo $book_authors[0]['authors']; ?>"  form="book_link<?php echo $count; ?>">
+                                            <button type="submit" name="submitparam" class="link-button" form="book_link<?php echo $count; ?>">
+                                                <?php echo $book_title[0]['title']; ?>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
+
                             <?php endif; ?>
+                        <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
-                    </ul>
-                    <h5 class="card-title">Books Will Read</h5>
-                    <ul class="list-group">
+                    <!-- </ul>
+                    <h5 class="card-title">Books Read</h5>
+                    <ul class="list-group"> -->
+                    <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
+                        <thead>
+                        <tr style="background-color:#B0B0B0">
+                            <th>Books to Read</th>         
+                        </tr>
+                        </thead>
+                        <?php $count = 1; ?>
                         <?php foreach($books as $book): ?>
                             <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
-                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                                <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
+                                    <tr>
+                                        <?php $book_title = get_book_title($book['isbn']); ?>
+                                        <?php $book_authors = get_book_authors($book['isbn']); ?>
+                                        <td>
+                                            <input type="hidden" name="title" value="<?php echo $book_title[0]['title']; ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="ISBN" value="<?php echo $book['isbn'] ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="authors" value="<?php echo $book_authors[0]['authors']; ?>"  form="book_link<?php echo $count; ?>">
+                                            <button type="submit" name="submitparam" class="link-button" form="book_link<?php echo $count; ?>">
+                                                <?php echo $book_title[0]['title']; ?>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
+
                             <?php endif; ?>
+                        <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
-                    </ul>
-                    <h5 class="card-title">Books Currently Reading</h5>
-                    <ul class="list-group">
+                    <!-- </ul>
+                    <h5 class="card-title">Books Will Read</h5>
+                    <ul class="list-group"> -->
+
+
+                    <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
+                        <thead>
+                        <tr style="background-color:#B0B0B0">
+                            <th>Books Read</th>         
+                        </tr>
+                        </thead>
+                        <?php $count = 1; ?>
                         <?php foreach($books as $book): ?>
-                            <?php if ($book['status'] == 'currently-reading' && isset($book['isbn'])): ?>
-                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
+                                <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
+                                    <tr>
+                                        <?php $book_title = get_book_title($book['isbn']); ?>
+                                        <?php $book_authors = get_book_authors($book['isbn']); ?>
+                                        <td>
+                                            <input type="hidden" name="title" value="<?php echo $book_title[0]['title']; ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="ISBN" value="<?php echo $book['isbn'] ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="authors" value="<?php echo $book_authors[0]['authors']; ?>"  form="book_link<?php echo $count; ?>">
+                                            <button type="submit" name="submitparam" class="link-button" form="book_link<?php echo $count; ?>">
+                                                <?php echo $book_title[0]['title']; ?>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </form>
+
                             <?php endif; ?>
+                        <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
-                    </ul>
+
                 </div>
             </div>
         </div>
@@ -193,3 +284,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 </div>
 </body>
 </html>
+
+

@@ -1,6 +1,6 @@
 <?php session_start(); ?>
 <?php require 'connect-db.php'; ?>
-<?php require 'filter_functions.php'; ?>
+<?php require 'book_filter_functions.php'; ?>
 <?php include('navbar.php'); ?>
 
 <?php
@@ -30,12 +30,15 @@ function check_user_exists($username){
    return false;
 }
 
- 
+if(isset($_POST['search_query'])){
+	$search_query = $_POST['search_query'];
+}
+
 $search_results = selectAllBooks();
+
 //$search_results = filterByTitle();
 
 if (isset($_POST['filter_options'])) {
-
     $filter = $_POST['filter_options'];
     echo $filter;
     if ($filter == 'title'){
@@ -50,10 +53,12 @@ if (isset($_POST['filter_options'])) {
     if ($filter == 'language'){
         $search_results = filterByLanguage();
     }
+	$_POST['search_results'] = $search_results;
 }
 else {
     //echo "no set";
 }
+
 
 //<?php if(isset($_POST["filter_options"]) && $_POST["filter_options"]  == "Author") echo "selected";
 ?>
@@ -85,7 +90,7 @@ else {
                                         </select>
                                     </div>
                                     <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-                                        <input type="text" placeholder="Search..." class="form-control"name="search_query">
+                                        <input type="text" placeholder="Search..." class="form-control"name="search_query" required>
                                     </div>
                                     <div class="col-lg-1 col-md-3 col-sm-12 p-0">
                                         <button type="submit" class="btn btn-base">
@@ -125,7 +130,32 @@ else {
             <th>Rate?</th>  
          </tr>
          </thead>
-         <?php foreach ($search_results as $item): ?>
+         <?php //foreach ($search_results as $item):
+				$max_pages = ceil(count($search_results)/100);
+				if(!isset($_POST['page_increment'])){
+					$_POST['page'] = 0;
+					$_POST['page_increment'] = 0;
+				}
+				//echo $_POST['page'];
+				//echo $_POST['page_increment'];
+				if(isset($_POST['next_page'])){
+					$_POST['page'] = $_POST['page'] + $_POST['page_increment'];
+					if($_POST['page'] > $max_pages-1){
+						$_POST['page'] = $_POST['page'] - $_POST['page_increment'];
+					}
+				}
+				if(isset($_POST['previous_page'])){
+					$_POST['page'] = $_POST['page'] - $_POST['page_increment'];
+					if($_POST['page'] < 0){
+						$_POST['page'] = $_POST['page'] + $_POST['page_increment'];
+					}
+				}
+				for ($x=0; $x <= 100; $x++){
+					if(!isset($search_results[$_POST['page'] * 100 + $x])){
+						break;
+					}
+					$item = $search_results[$_POST['page'] * 100 + $x];
+				?>
             <tr>
                <td><?php echo $item['title']; ?></td>
                <td><?php echo $item['authors']; ?></td>        
@@ -145,7 +175,36 @@ else {
                   </form>     
                </td>     
             </tr>
-         <?php endforeach; ?>
+				<?php } ?>
+		 
+			 <tbody>
+				<tr>
+					<td width="30%" align="left">
+						<form action="search_page.php" method="post">
+							<input type="submit" value="Previous" name="previous_page" />
+							<input type="hidden" name="page_increment" value=1 />
+							<input type="hidden" name="page" value=<?php echo $_POST['page']; ?> />
+							<?php if(isset($_POST['search_query']) and isset($_POST['filter_options'])){ ?>
+								<input type="hidden" name="search_query" = value=<?php echo $_POST['search_query']; ?> />
+								<input type="hidden" name="filter_options" = value=<?php echo $_POST['filter_options']; ?> />
+							<?php } ?>
+					</td>
+					<td>
+						<p> Page <?php echo $_POST['page'] + 1; ?> out of <?php echo $max_pages; ?> </p>
+					</td>
+					<td width="30%" align="right">
+						<form action="search_page.php" method="post">
+							<input type="submit" value= "Next" name="next_page" />
+							<input type="hidden" name="page_increment" value=1 />
+							<input type="hidden" name="page" value=<?php echo $_POST['page']; ?> />
+							<?php if(isset($_POST['search_query']) and isset($_POST['filter_options'])){ ?>
+								<input type="hidden" name="search_query" = value=<?php echo $_POST['search_query']; ?> />
+								<input type="hidden" name="filter_options" = value=<?php echo $_POST['filter_options']; ?> />
+							<?php } ?>
+					</td>
+				</tr>
+			 </tbody>
+		 
          </table>
     </div>  
 

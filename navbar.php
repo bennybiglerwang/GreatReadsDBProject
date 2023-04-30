@@ -38,6 +38,8 @@
                         <a href="logout.php">Logout</a>
                         <a href="search_page.php">Home</a> 
                         <a href="profile_page.php">Profile</a>
+                        <a href="recommendations.php">My Recs</a>
+                        <a href="search_users_page.php">Users</a>
                 <?php 
                     } else { // If user is not logged in, show log in link
                 ?>

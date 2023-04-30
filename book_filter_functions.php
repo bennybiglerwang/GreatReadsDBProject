@@ -70,4 +70,5 @@ function filterByLanguage(){
         $statement->closeCursor();
         return $results;
 }
+
 ?>

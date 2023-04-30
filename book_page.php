@@ -113,7 +113,7 @@
 		<div class="container">
 		  <h1> Join the discussion! </h1>  
 
-		  <form name="review_form" action="book_page.php" method="post">   
+		  <form name="review_form" action="book_page.php" id="review_button" data-inline="true" method="post">   
 		  <div class="row mb-3 mx-3">
 			<p> Review <i><?php echo " ".$_POST['title']; ?></i>: </p>
 			<textarea rows="6" cols="70" name="r_text" maxlength="1000" required></textarea>      
@@ -137,7 +137,14 @@
 		  <input type="submit" value="Review">
 		  </div>
 		</form>
-		
+
+		<?php if(isset($_SESSION['username'])){ ?>
+		<form action="create_recommendation.php" id="rec_button" data-inline="true" method="post">
+				<input type="submit" name="actionBtn" value="recommend this book!" />
+				<input type="hidden" name="book_to_rec" value="<?php echo $_POST['ISBN']; ?>"/>
+		</form>	
+		<?php }?>
+
 		<?php 
 		if(isset($_POST['r_text']) and isset($_SESSION['username'])){
 			try{
@@ -149,6 +156,8 @@
 			update_average_rating($_POST['ISBN'], $_POST['star_rating'] );
 		}
 		?>
+
+
 		
 		<h1>Reviews: </h1>
 		

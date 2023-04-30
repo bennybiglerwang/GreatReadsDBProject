@@ -32,9 +32,19 @@
     <div class="container-fluid">
         <div class="navbar-collapse collapse">
             <ul class="topnav">
-                <a class="active" href="sign_in.php">Log In</a>
-                 <a href="search_page.php">Home</a> 
-                <a href="profile_page.php">Profile</a>
+            <?php 
+                    // If user is logged in, show profile and logout links
+                    if(isset($_SESSION['username'])) { ?>
+                        <a href="logout.php">Logout</a>
+                        <a href="search_page.php">Home</a> 
+                        <a href="profile_page.php">Profile</a>
+                <?php 
+                    } else { // If user is not logged in, show log in link
+                ?>
+                        <a class="active" href="sign_in.php">Log In</a>
+                <?php 
+                    } 
+                ?>
             </ul>
         </div>
     </div>

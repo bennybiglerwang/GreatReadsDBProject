@@ -1,23 +1,45 @@
 <?php
 session_start();
 require 'connect-db.php';
+include('navbar.php');
+
+    class User { 
+        public $name;
+        public $email;
+        public $bio;
+    
+        function __construct($name, $email, $bio) {
+            $this->name = $name;
+            $this->email = $email;
+            $this->bio = $bio;
+        }
+    
+        function update_bio($new_bio) {
+            $this->bio = $new_bio;
+        }
+
+        function get_bio() {
+            return $this->bio;
+        }
+    }
 
 	if(isset($_SESSION['username'])){
         $username = $_SESSION['username'];
 
 		if(check_user_exists($username)){
             $_SESSION['username'] = $username;
-            $user = get_user_details($_SESSION['username']);
+            $user_details = get_user_details($_SESSION['username']);
 
             $activity = get_user_activity($_SESSION['username']);
             if($activity != null) { 
                 $_SESSION['review_num'] = $activity;
             }
 
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['bio'] = $user['bio'];
+            $_SESSION['email'] = $user_details->email;
+            $_SESSION['bio'] = $user_details->bio;
 
             $books = get_user_books($_SESSION['username']);
+
             if($books != null) { 
                 $_SESSION['isbn'] = $books;
             } else { 
@@ -25,8 +47,9 @@ require 'connect-db.php';
             }
 
 			echo "Signed in as ".$_SESSION['username'];
-		} else{
-			echo "User does not exist, try again!";
+		} else {
+			header('Location: sign_in.php');
+            exit();
 		}
     }
 
@@ -52,8 +75,14 @@ require 'connect-db.php';
         $statement = $db->prepare($query);
         $statement->bindValue(':username', $username);
         $statement->execute();
-        $user = $statement->fetch();
+        $user_details = $statement->fetch();
         $statement->closeCursor();
+
+        if(!$user_details){
+            return null;
+        }
+    
+        $user = new User('username', $user_details['email'], $user_details['bio']);
         return $user;
     }
 
@@ -89,6 +118,22 @@ require 'connect-db.php';
         return $books;
     }
 
+    function update_user_bio($username, $new_bio) {
+        global $db;
+        $query = "UPDATE users SET bio = :new_bio WHERE username = :username;";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':new_bio', $new_bio);
+        $statement->bindValue(':username', $username);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bio'])) {
+        $user_details = get_user_details($_SESSION['username']);
+        $user_details->update_bio($_POST['bio']);
+        $_SESSION['bio'] = $user_details->get_bio();
+        update_user_bio($_SESSION['username'], $_POST['bio']);
+    }
 
 ?>
 <!DOCTYPE html>
@@ -105,7 +150,11 @@ require 'connect-db.php';
                 <div class="card-body">
                     <p class="card-title">User: <?php echo $_SESSION['username']?></p>
                     <p class="card-text">Email: <?php echo $_SESSION['email']?></p>
-                    <p class="card-text">Bio: <?php echo $_SESSION['bio']?></p>
+                    <form method = "post">
+                        <label for = "bio">Bio:</label><br>
+                        <textarea id = "bio" name = "bio"><?php echo $_SESSION['bio']?></textarea></br>
+                        <input type = "submit" value = "Update Bio">
+                    </form>
                 </div>
             </div>
         </div>

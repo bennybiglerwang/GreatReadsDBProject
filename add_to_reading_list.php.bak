@@ -27,7 +27,7 @@ if(isset($_POST['ISBN']) && isset($_POST['status'])){
     $stmt->execute();
 
     // Redirect the user back to the page they were on
-    header('Location: book_page.php');
+    header('Location: book_details.php');
     exit();
 } else { 
     echo "This ain't working you bozo";

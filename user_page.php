@@ -5,7 +5,8 @@
 	} else { 
         header('Location: sign_in.php');
         exit();
-    }
+  }
+  
 ?>
 <?php require 'connect-db.php'; ?>
 <?php require 'friends_functions.php'; ?>

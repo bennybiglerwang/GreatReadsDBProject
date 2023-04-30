@@ -3,8 +3,9 @@
 	require 'connect-db.php';
 	include('navbar.php');
 
-	if(isset($_SESSION['username'])){
-		# echo "Signed in as ".$_SESSION['username'];
+	if(isset($_SESSION['POST'])){
+		$_POST = $_SESSION['POST'];
+		unset($_SESSION['POST']);
 	}
 
 	function add_to_reading_list($username, $ISBN, $status) {
@@ -80,7 +81,8 @@
 
 		?>
 		</p>
-		<p>
+<?php if(isset($_SESSION['username'])){ ?>
+<p>
 <div class="container">
 	<h3>Add to reading list:</h3>
     <form action="add_to_reading_list.php" method="post">
@@ -98,13 +100,13 @@
         <input type="reset">
     </form>
 </div>
-
-
 </p>
+<?php } ?>
 		
 		<div class="container">
 		  <h1> Join the discussion! </h1>  
-
+		
+		<?php if(isset($_SESSION['username'])){ ?>
 		  <form name="review_form" action="book_page.php" id="review_button" data-inline="true" method="post">   
 		  <div class="row mb-3 mx-3">
 			<p> Review <i><?php echo " ".$_POST['title']; ?></i>: </p>
@@ -129,6 +131,9 @@
 		  <input type="submit" value="Review">
 		  </div>
 		</form>
+		<?php } else {?>
+			<a href='login.php' > Sign in to leave a review or comment! </a>
+		<?php } ?>
 
 		<?php if(isset($_SESSION['username'])){ ?>
 		<form action="create_recommendation.php" id="rec_button" data-inline="true" method="post">
@@ -264,6 +269,7 @@
 				<p class ="sm" style="position:absolute; left:20px; top: 20px"> <?php echo "> ".$comment['c_text'] ?></p>
 			</div>
 			<?php endforeach ?>
+			<?php if(isset($_SESSION['username'])){ ?>
 			<div class="solid" style = "position:relative; padding-bottom:60px; background-color:silver">
 				<form name="comment_form" action="book_page.php" method="post">
 				<input type="text" class="form-control" name="c_text" style="position:absolute; left:20px; top:0px" required>
@@ -274,6 +280,7 @@
 				<input type="hidden" name="authors" value="<?php echo $_POST['authors']; ?>">
 				</form>
 			</div>
+			<?php } ?>
 		<?php endforeach ?>
 	</body>
 	

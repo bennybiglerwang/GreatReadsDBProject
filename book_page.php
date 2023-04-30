@@ -2,10 +2,11 @@
 	session_start();
 	require 'connect-db.php';
 	include('navbar.php');
-	
+
 	if(isset($_SESSION['POST'])){
 		$_POST = $_SESSION['POST'];
 		unset($_SESSION['POST']);
+
 	}
 
 	function add_to_reading_list($username, $ISBN, $status) {

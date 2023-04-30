@@ -1,11 +1,35 @@
-<?php session_start(); ?>
 <?php
+	session_start();
+	require 'connect-db.php';
+	include('navbar.php');
+
 	if(isset($_SESSION['username'])){
 		echo "Signed in as ".$_SESSION['username'];
+	} else { 
+		header('Location: sign_in.php');
+        exit();
 	}
+
+	function add_to_reading_list($username, $ISBN, $status) {
+        global $db;
+        
+        // Check if the user has already set a status for this book
+        $stmt = $db->prepare("SELECT * FROM set_status WHERE username=:username AND ISBN=:ISBN");
+        $stmt->execute(array(':username'=>$username, ':ISBN'=>$ISBN));
+        $result = $stmt->fetchAll();
+        
+        if($result) {
+            // Update the existing status for the book
+            $stmt = $db->prepare("UPDATE set_status SET status=:status WHERE username=:username AND ISBN=:ISBN");
+            $stmt->execute(array(':status'=>$status, ':username'=>$username, ':ISBN'=>$ISBN));
+        } else {
+            // Insert a new status for the book
+            $stmt = $db->prepare("INSERT INTO set_status (username, ISBN, status) VALUES (:username, :ISBN, :status)");
+            $stmt->execute(array(':username'=>$username, ':ISBN'=>$ISBN, ':status'=>$status));
+        }
+    }
 ?>
-<?php require 'connect-db.php'; ?>
-<?php include('navbar.php'); ?>
+?>
 
 <!DOCTYPE html>
 <html>
@@ -32,7 +56,6 @@
 	</style>
 	
 	<body>
-
 		<h1>
 		<?php 
 		if(isset($_POST['title'])){
@@ -58,17 +81,34 @@
 		} else {
 			echo "no ratings yet";
 		}
+		#if(isset($_POST['ISBN'])){
+		#	echo $_POST['ISBN'];
+		#} else { 
+		#	echo "where is the ISBN";
+		#}
 		?>
 		</p>
 		<p>
-		<?php 
-		if(isset($_POST['ISBN'])){
-			echo "ISBN ".$_POST['ISBN'];
-		} else {
-			echo "book does not exist";
-		}
-		?>
-		</p>
+<div class="container">
+	<h3>Add to reading list:</h3>
+    <form action="add_to_reading_list.php" method="post">
+        <input type="hidden" name="ISBN" value="<?php echo $_POST['ISBN']; ?>">
+        <input type="hidden" name="title" value="<?php echo $_POST['title']; ?>">
+        <input type="hidden" name="authors" value="<?php echo $_POST['authors']; ?>">
+        <select name="status">
+            <option value="">Select status</option>
+            <option value="to-read">To Read</option>
+            <option value="read">Read</option>
+            <option value="currently-reading">Currently Reading</option>
+        </select>
+        <input type="hidden" name="current_page" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+        <button type="submit">Add</button>
+        <input type="reset">
+    </form>
+</div>
+
+
+</p>
 		
 		<div class="container">
 		  <h1> Join the discussion! </h1>  
@@ -114,7 +154,6 @@
 			}
 			update_ratings_count($_POST['ISBN']);
 			update_average_rating($_POST['ISBN'], $_POST['star_rating'] );
-
 		}
 		?>
 

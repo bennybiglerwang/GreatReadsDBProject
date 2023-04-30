@@ -4,7 +4,7 @@
 	include('navbar.php');
 
 	if(isset($_SESSION['username'])){
-		echo "Signed in as ".$_SESSION['username'];
+		//echo "Signed in as ".$_SESSION['username'];
 	} else { 
 		header('Location: sign_in.php');
         exit();
@@ -28,7 +28,6 @@
             $stmt->execute(array(':username'=>$username, ':ISBN'=>$ISBN, ':status'=>$status));
         }
     }
-?>
 ?>
 
 <!DOCTYPE html>

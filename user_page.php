@@ -1,7 +1,7 @@
 <?php session_start(); ?>
 <?php
 	if(isset($_SESSION['username'])){
-		echo "Signed in as ".$_SESSION['username'];
+		//echo "Signed in as ".$_SESSION['username'];
 	}
 ?>
 <?php require 'connect-db.php'; ?>

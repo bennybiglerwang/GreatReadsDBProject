@@ -1,6 +1,6 @@
 <?php session_start(); ?>
 <?php require 'connect-db.php'; ?>
-<?php require 'filter_functions.php'; ?>
+<?php require 'user_filter_functions.php'; ?>
 <?php include('navbar.php'); ?>
 
 <?php
@@ -31,31 +31,22 @@ function check_user_exists($username){
 }
 
  
-$search_results = selectAllUsers();
-//$search_results = filterByTitle();
+$user_search_results = selectAllUsers();
 
-// if (isset($_POST['filter_options'])) {
+if (isset($_POST['filter_options'])) {
 
-//     $filter = $_POST['filter_options'];
-//     echo $filter;
-//     if ($filter == 'title'){
-//         $search_results = filterByTitle();
-//     }   
-//     if ($filter == 'authors'){
-//         $search_results = filterByAuthor();
-//     }
-//     if ($filter == 'isbn'){
-//         $search_results = filterByISBN();
-//     }
-//     if ($filter == 'language'){
-//         $search_results = filterByLanguage();
-//     }
-// }
-// else {
-//     //echo "no set";
-// }
-
-//<?php if(isset($_POST["filter_options"]) && $_POST["filter_options"]  == "Author") echo "selected";
+    $filter = $_POST['filter_options'];
+    //echo $filter;
+    if ($filter == 'username'){
+        $user_search_results = filterByUsername();
+    }   
+    if ($filter == 'email'){
+        $user_search_results = filterByEmail();
+    }
+}
+else {
+    //echo "no set";
+}
 ?>
 
 
@@ -80,7 +71,7 @@ $search_results = selectAllUsers();
         <div class="col-lg-12 card-margin">
             <div class="card search-form">
                 <div class="card-body p-0">
-                    <form id="search-form" action="search_page.php" method="POST">
+                    <form id="search-form" action="search_users_page.php" method="POST">
                         <div class="row">
                             <div class="col-12">
                                 <div class="row no-gutters">
@@ -130,7 +121,7 @@ $search_results = selectAllUsers();
             <th></th>     
          </tr>
          </thead>
-         <?php foreach ($search_results as $item): ?>
+         <?php foreach ($user_search_results as $item): ?>
             <tr>
                <td><?php echo $item['username']; ?></td>
                <td><?php echo $item['email']; ?></td>    

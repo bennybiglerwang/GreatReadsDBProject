@@ -1,10 +1,32 @@
-<?php session_start(); ?>
 <?php
-	if(isset($_SESSION['username'])){
-		echo "Signed in as ".$_SESSION['username'];
+	session_start();
+	require 'connect-db.php';
+	include('navbar.php');
+	
+	if(isset($_SESSION['POST'])){
+		$_POST = $_SESSION['POST'];
+		unset($_SESSION['POST']);
 	}
+
+	function add_to_reading_list($username, $ISBN, $status) {
+        global $db;
+        
+        // Check if the user has already set a status for this book
+        $stmt = $db->prepare("SELECT * FROM set_status WHERE username=:username AND ISBN=:ISBN");
+        $stmt->execute(array(':username'=>$username, ':ISBN'=>$ISBN));
+        $result = $stmt->fetchAll();
+        
+        if($result) {
+            // Update the existing status for the book
+            $stmt = $db->prepare("UPDATE set_status SET status=:status WHERE username=:username AND ISBN=:ISBN");
+            $stmt->execute(array(':status'=>$status, ':username'=>$username, ':ISBN'=>$ISBN));
+        } else {
+            // Insert a new status for the book
+            $stmt = $db->prepare("INSERT INTO set_status (username, ISBN, status) VALUES (:username, :ISBN, :status)");
+            $stmt->execute(array(':username'=>$username, ':ISBN'=>$ISBN, ':status'=>$status));
+        }
+    }
 ?>
-<?php require 'connect-db.php'; ?>
 
 <!DOCTYPE html>
 <html>
@@ -56,13 +78,40 @@
 		} else {
 			echo "no ratings yet";
 		}
+		#if(isset($_POST['ISBN'])){
+		#	echo $_POST['ISBN'];
+		#} else { 
+		#	echo "where is the ISBN";
+		#}
 		?>
 		</p>
+<?php if(isset($_SESSION['username'])){ ?>
+<p>
+<div class="container">
+	<h3>Add to reading list:</h3>
+    <form action="add_to_reading_list.php" method="post">
+        <input type="hidden" name="ISBN" value="<?php echo $_POST['ISBN']; ?>">
+        <input type="hidden" name="title" value="<?php echo $_POST['title']; ?>">
+        <input type="hidden" name="authors" value="<?php echo $_POST['authors']; ?>">
+        <select name="status">
+            <option value="">Select status</option>
+            <option value="to-read">To Read</option>
+            <option value="read">Read</option>
+            <option value="currently-reading">Currently Reading</option>
+        </select>
+        <input type="hidden" name="current_page" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+        <button type="submit">Add</button>
+        <input type="reset">
+    </form>
+</div>
+</p>
+<?php } ?>
 		
 		<div class="container">
 		  <h1> Join the discussion! </h1>  
-
-		  <form name="review_form" action="book_page.php" method="post">   
+		
+		<?php if(isset($_SESSION['username'])){ ?>
+		  <form name="review_form" action="book_page.php" id="review_button" data-inline="true" method="post">   
 		  <div class="row mb-3 mx-3">
 			<p> Review <i><?php echo " ".$_POST['title']; ?></i>: </p>
 			<textarea rows="6" cols="70" name="r_text" maxlength="1000" required></textarea>      
@@ -86,7 +135,17 @@
 		  <input type="submit" value="Review">
 		  </div>
 		</form>
-		
+		<?php } else {?>
+			<a href='login.php' > Sign in to leave a review or comment! </a>
+		<?php } ?>
+
+		<?php if(isset($_SESSION['username'])){ ?>
+		<form action="create_recommendation.php" id="rec_button" data-inline="true" method="post">
+				<input type="submit" name="actionBtn" value="recommend this book!" />
+				<input type="hidden" name="book_to_rec" value="<?php echo $_POST['ISBN']; ?>"/>
+		</form>	
+		<?php }?>
+
 		<?php 
 		if(isset($_POST['r_text']) and isset($_SESSION['username'])){
 			try{
@@ -94,8 +153,12 @@
 			} catch( PDOException $Exception) {
 				echo '<span style="color:#880808;text-align:center;"> !! You have already reviewed this book !! </span>';
 			}
+			update_ratings_count($_POST['ISBN']);
+			update_average_rating($_POST['ISBN'], $_POST['star_rating'] );
 		}
 		?>
+
+
 		
 		<h1>Reviews: </h1>
 		
@@ -156,12 +219,39 @@
 			$statement->execute();
 			$statement->closeCursor();
 		}
+
+		function update_ratings_count($ISBN){
+			global $db;
+			$query = "
+			update books 
+			set ratings_count = ratings_count + 1
+			where isbn = :ISBN;";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':ISBN', $ISBN);
+			$statement->execute();
+			$statement->closeCursor();
+		}
+
+		function update_average_rating($ISBN, $star_rating){
+			global $db;
+			$query = "
+			update books 
+			set average_rating = ((average_rating*(ratings_count-1)) + :star_rating)/ratings_count
+			where isbn = :ISBN;";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':ISBN', $ISBN);
+			$statement->bindValue(':star_rating', $star_rating);
+			$statement->execute();
+			$statement->closeCursor();
+		}
+
+
 		
 		if(isset($_POST['c_text']) and isset($_SESSION['username'])){
 			post_comment($_SESSION['username'], $_POST['review_num'], $_POST['c_text']);
-			#echo "Posted review.";
+			#echo "Posted comment.";
 		}
-		
+
 		if(isset($_POST['ISBN'])){
 			$reviews = select_reviews_for_book($_POST['ISBN']);
 		} else {
@@ -184,6 +274,7 @@
 			</div>
 			<?php endforeach ?>
 			<div class="solid" style = "position:relative; padding-bottom:60px; background-color:silver">
+				<?php if(isset($_SESSION['username'])){ ?>
 				<form name="comment_form" action="book_page.php" method="post">
 				<input type="text" class="form-control" name="c_text" style="position:absolute; left:20px; top:0px" required>
 				<input type="submit" class="form-control" value="Reply" style="position:absolute; left:20px; top:28px">
@@ -192,6 +283,7 @@
 				<input type="hidden" name="title" value="<?php echo $_POST['title']; ?>">
 				<input type="hidden" name="authors" value="<?php echo $_POST['authors']; ?>">
 				</form>
+				<?php } ?>
 			</div>
 		<?php endforeach ?>
 	</body>

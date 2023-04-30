@@ -220,7 +220,7 @@ include('navbar.php');
                                         <?php $book_authors = get_book_authors($book['isbn']); ?>
                                         <td>
                                             <input type="hidden" name="title" value="<?php echo $book_title[0]['title']; ?>" form="book_link<?php echo $count; ?>">
-                                            <input type="hidden" name="ISBN" value="<?php echo $item['book_isbn'] ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="ISBN" value="<?php echo $book['isbn'] ?>" form="book_link<?php echo $count; ?>">
                                             <input type="hidden" name="authors" value="<?php echo $book_authors[0]['authors']; ?>"  form="book_link<?php echo $count; ?>">
                                             <button type="submit" name="submitparam" class="link-button" form="book_link<?php echo $count; ?>">
                                                 <?php echo $book_title[0]['title']; ?>
@@ -250,7 +250,7 @@ include('navbar.php');
                                         <?php $book_authors = get_book_authors($book['isbn']); ?>
                                         <td>
                                             <input type="hidden" name="title" value="<?php echo $book_title[0]['title']; ?>" form="book_link<?php echo $count; ?>">
-                                            <input type="hidden" name="ISBN" value="<?php echo $item['book_isbn'] ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="ISBN" value="<?php echo $book['isbn'] ?>" form="book_link<?php echo $count; ?>">
                                             <input type="hidden" name="authors" value="<?php echo $book_authors[0]['authors']; ?>"  form="book_link<?php echo $count; ?>">
                                             <button type="submit" name="submitparam" class="link-button" form="book_link<?php echo $count; ?>">
                                                 <?php echo $book_title[0]['title']; ?>
@@ -280,7 +280,7 @@ include('navbar.php');
                                         <?php $book_authors = get_book_authors($book['isbn']); ?>
                                         <td>
                                             <input type="hidden" name="title" value="<?php echo $book_title[0]['title']; ?>" form="book_link<?php echo $count; ?>">
-                                            <input type="hidden" name="ISBN" value="<?php echo $item['book_isbn'] ?>" form="book_link<?php echo $count; ?>">
+                                            <input type="hidden" name="ISBN" value="<?php echo $book['isbn'] ?>" form="book_link<?php echo $count; ?>">
                                             <input type="hidden" name="authors" value="<?php echo $book_authors[0]['authors']; ?>"  form="book_link<?php echo $count; ?>">
                                             <button type="submit" name="submitparam" class="link-button" form="book_link<?php echo $count; ?>">
                                                 <?php echo $book_title[0]['title']; ?>

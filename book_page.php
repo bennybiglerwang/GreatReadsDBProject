@@ -6,7 +6,6 @@
 	if(isset($_SESSION['POST'])){
 		$_POST = $_SESSION['POST'];
 		unset($_SESSION['POST']);
-
 	}
 
 	function add_to_reading_list($username, $ISBN, $status) {
@@ -79,11 +78,7 @@
 		} else {
 			echo "no ratings yet";
 		}
-		#if(isset($_POST['ISBN'])){
-		#	echo $_POST['ISBN'];
-		#} else { 
-		#	echo "where is the ISBN";
-		#}
+
 		?>
 		</p>
 <?php if(isset($_SESSION['username'])){ ?>

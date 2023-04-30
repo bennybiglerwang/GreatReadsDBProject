@@ -199,6 +199,7 @@ function get_user_activity($username) {
             </div>  
         </div>
     </div>
+    <?php if(isset($_SESSION['username'])){ ?>
     <form action="user_page.php" method="post">
         <?php if(checkFriendshipStatus($_SESSION['username'], $username) == "self"){ ?>
             <input type="submit" name="actionBtn" value="self" disabled />
@@ -222,6 +223,7 @@ function get_user_activity($username) {
             <input type="hidden" name="username" value="<?php echo $username; ?>"/>
             <input type="hidden" name="email" value="<?php echo $email; ?>"/>
             <input type="hidden" name="bio" value="<?php echo $bio; ?>"/>
+            <?php } ?>
     </form>     
     <?php } ?>
     <br></br>

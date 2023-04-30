@@ -1,6 +1,6 @@
 <?php session_start(); ?>
 <?php require 'connect-db.php'; ?>
-<?php require 'filter_functions.php'; ?>
+<?php require 'book_filter_functions.php'; ?>
 <?php include('navbar.php'); ?>
 
 <?php
@@ -192,7 +192,7 @@ else {
 						<p> Page <?php echo $_POST['page'] + 1; ?> out of <?php echo $max_pages; ?> </p>
 					</td>
 					<td width="30%" align="right">
-						<form action=="search_page.php" method="post">
+						<form action="search_page.php" method="post">
 							<input type="submit" value= "Next" name="next_page" />
 							<input type="hidden" name="page_increment" value=1 />
 							<input type="hidden" name="page" value=<?php echo $_POST['page']; ?> />

@@ -71,18 +71,4 @@ function filterByLanguage(){
         return $results;
 }
 
-
-//filters for search_friends_page
-
-function selectAllUsers(){
-
-    global $db;
-    
-    $query="select * from users";
-    $statement = $db->prepare($query);
-    $statement->execute();
-    $result = $statement->fetchAll();
-    $statement->closeCursor();
-    return $result;
-}
 ?>

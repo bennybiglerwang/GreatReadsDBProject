@@ -44,7 +44,6 @@
                     } else { // If user is not logged in, show log in link
                 ?>
                         <a class="active" href="sign_in.php">Log In</a>
-						<a href="search_page.php">Home</a>
                 <?php 
                     } 
                 ?>

@@ -241,6 +241,61 @@
 			$statement->closeCursor();
 		}
 
+		function compute_review_score($review_num){
+			global $db;
+			$query = "
+			select sum(score)
+			from (select score from review_vote
+				  where review_num = :review_num) as review_score;";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':review_num', $review_num);
+			$statement->execute();
+			$results = $statement->fetchAll();
+			$statement->closeCursor();
+			return $results;
+
+	   }
+
+	   function compute_comment_score($comment_num){
+			global $db;
+			$query = "
+			select sum(score)
+			from (select score from comment_vote
+				  where comment_num = :comment_num) as comment_score;";		
+			$statement = $db->prepare($query);
+			$statement->bindValue(':comment_num', $comment_num);
+			$statement->execute();
+			$results = $statement->fetchAll();
+			$statement->closeCursor();
+			return $results;
+
+	   }
+	   
+	   function add_vote_comment($username, $comment_num, $score){
+		   global $db;
+		   $query = "
+		   insert into comment_vote
+		   values(:username, :comment_num, :score);";
+		   $statement = $db->prepare($query);
+		   $statement->bindValue(':username', $username);
+		   $statement->bindValue(':comment_num', $comment_num);
+		   $statement->bindValue(':score', $score);
+		   $statement->execute();
+		   $statement->closeCursor();
+	   }
+	   function add_vote_review($username, $review_num, $score){
+		   global $db;
+		   $query = "
+		   insert into review_vote
+		   values(:username, :review_num, :score);";
+		   $statement = $db->prepare($query);
+		   $statement->bindValue(':username', $username);
+		   $statement->bindValue(':review_num', $review_num);
+		   $statement->bindValue(':score', $score);
+		   $statement->execute();
+		   $statement->closeCursor();
+	   }
+
 
 		
 		if(isset($_POST['c_text']) and isset($_SESSION['username'])){
@@ -253,6 +308,22 @@
 		} else {
 			$reviews = [];
 		}
+		if(isset($_POST['r_like']) and isset($_SESSION['username']))
+		{
+			add_vote_review($_SESSION['username'], $_POST['review_num'], '1');
+		}
+		if(isset($_POST['r_dislike']) and isset($_SESSION['username']))
+		{
+			add_vote_review($_SESSION['username'],  $_POST['review_num'], '-1');
+		}
+		if(isset($_POST['c_like']) and isset($_SESSION['username']))
+		{
+			add_vote_comment($_SESSION['username'],  $_POST['comment_num'], '1');
+		}
+		if(isset($_POST['c_dislike']) and isset($_SESSION['username']))
+		{
+			add_vote_comment($_SESSION['username'],  $_POST['comment_num'], '-1');
+		}
 		?>
 		<?php foreach ($reviews as $review): ?>
 			<div class="solid" style="background-color:gainsboro">
@@ -260,6 +331,30 @@
 			<h3><?php echo $review['username'].": " ?></h3>
 			<p> <?php echo $review['r_text'] ?></p>
 			</div>
+			
+			<div class="solid" style="background-color:gainsboro">
+
+				<?php
+				$Review_Score = compute_review_score($review['review_num']);
+				if ($Review_Score[0]['sum(score)'] == NULL){
+				$Review_Score[0]['sum(score)'] = 0;
+				}
+				echo "<h6> Score: " . $Review_Score[0]['sum(score)'] .  "</h6>";
+				?>
+
+				<form action="book_page.php" method="post">
+					<button style="font-size:18px" name="r_like" value="r_like">Like <i class="fa fa-thumbs-up"></i>
+					</button>
+					<button style="font-size:18px" name="r_dislike" value="r_dislike">Dislike  <i class="fa fa-thumbs-down"></i>
+					</button>
+					<input type="hidden" name="review_num" value=<?php echo $review['review_num']?> >
+					<input type="hidden" name="ISBN" value="<?php echo $_POST['ISBN']; ?>">
+					<input type="hidden" name="title" value="<?php echo $_POST['title']; ?>">
+					<input type="hidden" name="authors" value="<?php echo $_POST['authors']; ?>">
+				</form>
+			
+			</div>
+
 			<?php 
 			$comments = select_comments_for_review($review['review_num']);
 			foreach ($comments as $comment): 
@@ -267,6 +362,29 @@
 			<div class="solid" style = "position:relative; padding-bottom:60px; background-color:silver">
 				<h5 class = "sm" style="position:absolute; left:20px; top:0px"><?php echo $comment['username']." replied on ".$comment['c_date'].": " ?></h3>
 				<p class ="sm" style="position:absolute; left:20px; top: 20px"> <?php echo "> ".$comment['c_text'] ?></p>
+			</div>
+			<div class="solid" style = "position:relative; padding-bottom:10px; background-color:silver">
+			     
+				<?php
+				$Comment_Score = compute_comment_score($comment['comment_num']);
+				if ($Comment_Score[0]['sum(score)'] == NULL){
+				$Comment_Score[0]['sum(score)'] = 0;
+				}			
+				echo "<h6> Score: " . $Comment_Score[0]['sum(score)'] .  "</h6>";
+				?> 
+
+				<form action="book_page.php" method="post">
+					<button style="font-size:12px" name="c_like" value="c_like">Like <i class="fa fa-thumbs-up"></i>
+					</button>
+					<button style="font-size:12px" name="c_dislike" value="c_dislike">Dislike  <i class="fa fa-thumbs-down"></i>
+					</button>
+					<input type="hidden" name="comment_num" value=<?php echo $comment['comment_num']?> >
+					<input type="hidden" name="review_num" value=<?php echo $review['review_num']?> >
+					<input type="hidden" name="ISBN" value="<?php echo $_POST['ISBN']; ?>">
+					<input type="hidden" name="title" value="<?php echo $_POST['title']; ?>">
+					<input type="hidden" name="authors" value="<?php echo $_POST['authors']; ?>">
+				</form>
+				
 			</div>
 			<?php endforeach ?>
 			<?php if(isset($_SESSION['username'])){ ?>

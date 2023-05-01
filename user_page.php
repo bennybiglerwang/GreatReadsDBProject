@@ -120,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="book_link.css"/>
 
@@ -143,13 +144,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <?php if(checkFriendshipStatus($_SESSION['username'], $username) == "self"){ ?>
             <input type="submit" name="actionBtn" value="self" disabled />
         <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "not friends"){ ?>
-            <input type="submit" name="actionBtn" value="friend" />
+            <input type="submit" name="actionBtn" value="Send a Friend Request" />
             <input type="hidden" name="friend_to_request" value="<?php echo $username; ?>"/>
             <input type="hidden" name="username" value="<?php echo $username; ?>"/>
             <input type="hidden" name="email" value="<?php echo $email; ?>"/>
             <input type="hidden" name="bio" value="<?php echo $bio; ?>"/>
         <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "friends"){ ?>
-            <input type="submit" name="actionBtn" value="unfriend" />
+            <input type="submit" name="actionBtn" value="Unfriend" />
             <input type="hidden" name="friend_to_unfriend" value="<?php echo $_POST['username']; ?>"/>
             <input type="hidden" name="username" value="<?php echo $username; ?>"/>
             <input type="hidden" name="email" value="<?php echo $email; ?>"/>
@@ -173,19 +174,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <div class ="card-body">
                     <p class="card-title">Reviews: <?php if(count($activity)>0) {echo count($_POST['review_num']);?></p>
                     <?php foreach($_POST['review_num'] as $activity): ?>
-                        <p class="card-text">Review: <?php echo $activity['r_text']?> (Review number: <?php echo $activity['review_num']?>)</p>
+                        <p class="card-text">Review: <?php echo $activity['r_text']?> </p>
                     <?php endforeach; } else {echo "This user has no reviews";}?>
                 </div>
             </div>
         </div>
     </div>
 
-    <strong>Books</strong>
+    <strong>Reading Lists</strong>
     <div class="row">
         <div class="col-lg-8"> 
             <div class ="card">
                 <div class ="card-body">
-                    <h5 class="card-title">Books Read</h5>
+
+                    <h5 class="card-title">Books I've Read</h5>
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
@@ -211,16 +213,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     </tr>
                                 </form>
 
+
                             <?php endif; ?>
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
+
                     <!-- </ul>
                     <h5 class="card-title">Books Read</h5>
                     <ul class="list-group"> -->
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Books to Read</th>         
+                            <th>Books I Want To Read</th>         
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -241,9 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     </tr>
                                 </form>
 
+
                             <?php endif; ?>
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
+                      
                     <!-- </ul>
                     <h5 class="card-title">Books Will Read</h5>
                     <ul class="list-group"> -->
@@ -252,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Books Read</th>         
+                            <th>Books I've Read</th>         
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -273,10 +279,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                                     </tr>
                                 </form>
 
+
                             <?php endif; ?>
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
 
+                    </ul>
+                   
                 </div>
             </div>
         </div>

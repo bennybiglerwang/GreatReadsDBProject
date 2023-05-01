@@ -162,9 +162,9 @@ include('navbar.php');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="book_link.css"/>
-
+    <link href="./index_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div class="container">
@@ -184,6 +184,7 @@ include('navbar.php');
             </div>
         </div>
     </div>
+    <br>
     <strong>User Activity</strong>
     <div class="row">
         <div class="col-lg-8"> 
@@ -191,14 +192,14 @@ include('navbar.php');
                 <div class ="card-body">
                     <p class="card-title">Reviews: <?php echo count($_SESSION['review_num'] ?? [])?></p>
                     <?php foreach($_SESSION['review_num'] ?? [] as $activity): ?>
-                        <p class="card-text">Review: <?php echo $activity['r_text']?> (Review number: <?php echo $activity['review_num']?>)</p>
+                        <p class="card-text">Review: <?php echo $activity['r_text']?> </p>
                     <?php endforeach; ?>
                 </div>
             </div>
         </div>
     </div>
     
-    <strong>Books</strong>
+    <strong>Reading Lists</strong>
     <div class="row">
         <div class="col-lg-8"> 
             <div class ="card">
@@ -208,7 +209,9 @@ include('navbar.php');
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Currently Reading</th>         
+
+                            <th>Books I'm Currently Reading</th>         
+
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -232,13 +235,13 @@ include('navbar.php');
                             <?php endif; ?>
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
-                    <!-- </ul>
-                    <h5 class="card-title">Books Read</h5>
-                    <ul class="list-group"> -->
+
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Books to Read</th>         
+
+                            <th>Books I've Read</th>         
+
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -263,14 +266,11 @@ include('navbar.php');
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
 
-                    <!-- </ul>
-                    <h5 class="card-title">Books Will Read</h5>
-                    <ul class="list-group"> -->
-
-                        <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
+                    <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Books Read</th>         
+                            <th>Books I Want to Read</th>         
+
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -294,11 +294,3 @@ include('navbar.php');
                             <?php endif; ?>
                         <?php $count = $count + 1; ?>
                         <?php endforeach; ?>
-                    <!-- </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>    
-</body>
-</html>

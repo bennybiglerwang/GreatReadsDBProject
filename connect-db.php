@@ -1,6 +1,6 @@
 <?php
 /** S23, PHP (on local XAMPP or CS server) connect to MySQL instance (GCP) **/
- $username = 'root';
+ $username = 'rs7ehc@virginia.edu';
  $password = 'greatreads4750';
  $host = 'cs4750project-381601:us-east4:greatreads';       // e.g., 'cs4750:us-east4:db-demo'; 
  $dbname = 'cs4750finalproject';        // e.g., 'guestbook';

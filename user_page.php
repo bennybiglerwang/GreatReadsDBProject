@@ -120,7 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+<link href="./index_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="book_link.css"/>
 
@@ -186,12 +188,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <div class="col-lg-8"> 
             <div class ="card">
                 <div class ="card-body">
-
-                    <h5 class="card-title">Books I've Read</h5>
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
-                            <th>Currently Reading</th>         
+                            <th>Books I'm Currently Reading</th>         
                         </tr>
                         </thead>
                         <?php $count = 1; ?>

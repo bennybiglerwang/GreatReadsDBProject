@@ -1,32 +1,25 @@
 <?php
-// Start the session and include any required files
 session_start();
 require 'connect-db.php';
 
 $_SESSION['POST'] = $_POST;
 
-// Redirect the user to the sign-in page if they're not signed in
 if (!isset($_SESSION['username'])) {
     header('Location: sign_in.php');
     exit();
 }
 
-// Check if the form was submitted
 if(isset($_POST['ISBN']) && isset($_POST['status'])){
     global $db;
-    // Prepare the SQL statement
     $stmt = $db->prepare('INSERT INTO set_status (username, isbn, status) VALUES (:username, :isbn, :status)
         ON DUPLICATE KEY UPDATE status = :status');
 
-    // Bind the values to the parameters
     $stmt->bindParam(':username', $_SESSION['username']);
     $stmt->bindParam(':isbn', $_POST['ISBN']);
     $stmt->bindParam(':status', $_POST['status']);
 
-    // Execute the SQL statement
     $stmt->execute();
 
-    // Redirect the user back to the page they were on
     header('Location: book_page.php');
     exit();
 } else { 

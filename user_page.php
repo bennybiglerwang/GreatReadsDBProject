@@ -98,7 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <link href="./index_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div class="container">
@@ -119,13 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <?php if(checkFriendshipStatus($_SESSION['username'], $username) == "self"){ ?>
             <input type="submit" name="actionBtn" value="self" disabled />
         <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "not friends"){ ?>
-            <input type="submit" name="actionBtn" value="friend" />
+            <input type="submit" name="actionBtn" value="Send a Friend Request" />
             <input type="hidden" name="friend_to_request" value="<?php echo $username; ?>"/>
             <input type="hidden" name="username" value="<?php echo $username; ?>"/>
             <input type="hidden" name="email" value="<?php echo $email; ?>"/>
             <input type="hidden" name="bio" value="<?php echo $bio; ?>"/>
         <?php } elseif(checkFriendshipStatus($_SESSION['username'], $username) == "friends"){ ?>
-            <input type="submit" name="actionBtn" value="unfriend" />
+            <input type="submit" name="actionBtn" value="Unfriend" />
             <input type="hidden" name="friend_to_unfriend" value="<?php echo $_POST['username']; ?>"/>
             <input type="hidden" name="username" value="<?php echo $username; ?>"/>
             <input type="hidden" name="email" value="<?php echo $email; ?>"/>
@@ -149,19 +151,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <div class ="card-body">
                     <p class="card-title">Reviews: <?php if(count($activity)>0) {echo count($_POST['review_num']);?></p>
                     <?php foreach($_POST['review_num'] as $activity): ?>
-                        <p class="card-text">Review: <?php echo $activity['r_text']?> (Review number: <?php echo $activity['review_num']?>)</p>
+                        <p class="card-text">Review: <?php echo $activity['r_text']?> </p>
                     <?php endforeach; } else {echo "This user has no reviews";}?>
                 </div>
             </div>
         </div>
     </div>
 
-    <strong>Books</strong>
+    <strong>Reading Lists</strong>
     <div class="row">
         <div class="col-lg-8"> 
             <div class ="card">
                 <div class ="card-body">
-                    <h5 class="card-title">Books Read</h5>
+                <h5 class="card-title">Books I'm Currently Reading</h5>
+                    <ul class="list-group">
+                        <?php foreach($books as $book): ?>
+                            <?php if ($book['status'] == 'currently-reading' && isset($book['isbn'])): ?>
+                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                    <h5 class="card-title">Books I've Read</h5>
                     <ul class="list-group">
                         <?php $books = get_user_books($username); ?>
                         <?php foreach($books as $book): ?>
@@ -170,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </ul>
-                    <h5 class="card-title">Books Will Read</h5>
+                    <h5 class="card-title">Books I Want To Read</h5>
                     <ul class="list-group">
                         <?php foreach($books as $book): ?>
                             <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
@@ -178,14 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </ul>
-                    <h5 class="card-title">Books Currently Reading</h5>
-                    <ul class="list-group">
-                        <?php foreach($books as $book): ?>
-                            <?php if ($book['status'] == 'currently-reading' && isset($book['isbn'])): ?>
-                                <li class="list-group-item"><?php echo $_SESSION['bookTitles'][$book['isbn']]; ?></li>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </ul>
+                    
                 </div>
             </div>
         </div>

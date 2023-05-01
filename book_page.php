@@ -137,7 +137,7 @@
 
 		<?php if(isset($_SESSION['username'])){ ?>
 		<form action="create_recommendation.php" id="rec_button" data-inline="true" method="post">
-				<input type="submit" name="actionBtn" value="recommend this book!" />
+				<input type="submit" name="actionBtn" value="Recommend this book!" />
 				<input type="hidden" name="book_to_rec" value="<?php echo $_POST['ISBN']; ?>"/>
 		</form>	
 		<?php }?>

@@ -209,7 +209,9 @@ include('navbar.php');
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
+
                             <th>Books I'm Currently Reading</th>         
+
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
@@ -237,12 +239,14 @@ include('navbar.php');
                     <table class="w3-table w3-bordered w3-card-4 left" style="width: 30%">
                         <thead>
                         <tr style="background-color:#B0B0B0">
+
                             <th>Books I've Read</th>         
+
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
                         <?php foreach($_SESSION['isbn'] ?? [] as $book): ?>
-                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
+                            <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
                                 <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
                                     <tr>
                                         <?php $book_title = get_book_title($book['isbn']); ?>
@@ -266,11 +270,12 @@ include('navbar.php');
                         <thead>
                         <tr style="background-color:#B0B0B0">
                             <th>Books I Want to Read</th>         
+
                         </tr>
                         </thead>
                         <?php $count = 1; ?>
                         <?php foreach($_SESSION['isbn'] ?? [] as $book): ?>
-                            <?php if ($book['status'] == 'to-read' && isset($book['isbn'])): ?>
+                            <?php if ($book['status'] == 'read' && isset($book['isbn'])): ?>
                                 <form method="POST" action="book_page.php" class="inline" id="book_link<?php echo $count;?>">
                                     <tr>
                                         <?php $book_title = get_book_title($book['isbn']); ?>
